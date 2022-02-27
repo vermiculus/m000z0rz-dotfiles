@@ -76,8 +76,7 @@
  save-interprogram-paste-before-kill t
  ;;mark-even-if-inactive nil
  kill-whole-line t ;; Let C-k delete the entire line
- confirm-kill-processes nil
- )
+ confirm-kill-processes nil)
 
 ;; always utf-8 by default
 (set-charset-priority 'unicode)
@@ -123,6 +122,7 @@
 
 (use-package magit-delta
   :if (executable-find "delta")
+  ;; be aware of dandavision/magit-delta#22
   :ensure t
   :disabled t
   :hook (magit-mode . magit-delta-mode))
@@ -132,15 +132,16 @@
 
 (unbind-key "C-z") ;; suspend-frame
 
-(if ( version< "27.0" emacs-version ) ; )
+(if (version< "27.0" emacs-version)
     (set-fontset-font "fontset-default" 'unicode "Apple Color Emoji" nil 'prepend)
-    (warn "This Emacs version is too old to properly support emoji."))
+  (warn "This Emacs version is too old to properly support emoji."))
 
+;;; why the ignore-errors here?
 (ignore-errors (set-frame-font "Menlo-10"))
 (use-package all-the-icons
+  ;; NOTE: if icons are broken, you may need to run
+  ;; `all-the-icons-install-fonts`
   :ensure t)
-;; NOTE: if icons are broken, you may need to run
-;; `all-the-icons-install-fonts`
 
 (use-package all-the-icons-dired
   :ensure t
@@ -152,10 +153,9 @@
 
 ;; hide toolbars and junk
 (when (window-system)
-  (tool-bar-mode -1)
-  ;;  (scroll-bar-mode -1)
+  ;; (scroll-bar-mode -1)
   ;; (tooltip-mode -1)
-  )
+  (tool-bar-mode -1))
 
 ;; make it easier to tell which buffer is active
 (use-package dimmer
@@ -227,6 +227,9 @@
 
 (use-package tree-sitter
   :ensure t
+  ;; seems like these would be all the programming language modes you
+  ;; use -- you *might* be interested in `prog-mode-hook' -- but keep
+  ;; in mind tree-sitter might not work with *everything*?
   :hook ((js-mode . tree-sitter-hl-mode)
 	 (sh-mode . tree-sitter-hl-mode)
 	 (c-mode . tree-sitter-hl-mode)
@@ -306,6 +309,8 @@
 ;;  (find-file "C:/Users/bbaker/OneDrive - epic.com/Documents/notes/emacs1.org")
 ;;(add-hook 'emacs-startup-hook #'my-default-window-setup)
 (desktop-save-mode 1)
+;;; this sounds kindof like the `perspective' package, though I've
+;;; never used it
 
 
 ;; sort of adapted from
