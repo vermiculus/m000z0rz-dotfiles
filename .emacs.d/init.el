@@ -321,17 +321,19 @@ string and a double-quoted string."
       (when (not in-string)
         (user-error "Not in a string"))
       (let* ((string-start (nth 8 syn))
+             (string-end (save-excursion
+	                   (goto-char string-start)
+	                   (forward-sexp)
+	                   (point)))
 	     (old-quote (aref (buffer-substring string-start (1+ string-start)) 0))
 	     (new-quote (if (char-equal old-quote ?`) ?\" ?`)))
         (save-excursion
-	  (goto-char string-start)
-	  (forward-sexp)
-	  (setq string-end (point))
-	  (delete-char -1)
-	  (insert new-quote)
-	  (goto-char string-start)
-	  (delete-char 1)
-	  (insert new-quote))))))
+          (goto-char string-start)
+          (delete-char 1)
+          (insert-char new-quote)
+          (goto-char (1- string-end))
+          (delete-char 1)
+          (insert-char new-quote))))))
 
 ;; if you've got a long mapping, the following will be more expressive
 (ignore
