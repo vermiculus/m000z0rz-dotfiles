@@ -320,9 +320,8 @@ string and a double-quoted string."
 	   (in-string (nth 3 syn)))
       (when (not in-string)
         (user-error "Not in a string"))
-      (let* (
-	     (string-start (nth 8 syn))
-	     (old-quote (aref (buffer-substring string-start (+ string-start 1)) 0 ))
+      (let* ((string-start (nth 8 syn))
+	     (old-quote (aref (buffer-substring string-start (1+ string-start)) 0))
 	     (new-quote (if (char-equal old-quote ?`) ?\" ?`)))
 	(goto-char string-start)
 	(forward-sexp)
@@ -331,8 +330,7 @@ string and a double-quoted string."
 	(insert new-quote)
 	(goto-char string-start)
 	(delete-char 1)
-	(insert new-quote)
-	))))
+	(insert new-quote)))))
 
 ;; bind M-` to toggle-typescript-interpolated-quote in typescript-mode
 (add-hook 'typescript-mode-hook
