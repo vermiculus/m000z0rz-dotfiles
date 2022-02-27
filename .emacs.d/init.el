@@ -323,14 +323,15 @@ string and a double-quoted string."
       (let* ((string-start (nth 8 syn))
 	     (old-quote (aref (buffer-substring string-start (1+ string-start)) 0))
 	     (new-quote (if (char-equal old-quote ?`) ?\" ?`)))
-	(goto-char string-start)
-	(forward-sexp)
-	(setq string-end (point))
-	(delete-char -1)
-	(insert new-quote)
-	(goto-char string-start)
-	(delete-char 1)
-	(insert new-quote)))))
+        (save-excursion
+	  (goto-char string-start)
+	  (forward-sexp)
+	  (setq string-end (point))
+	  (delete-char -1)
+	  (insert new-quote)
+	  (goto-char string-start)
+	  (delete-char 1)
+	  (insert new-quote))))))
 
 ;; if you've got a long mapping, the following will be more expressive
 (ignore
